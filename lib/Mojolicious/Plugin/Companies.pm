@@ -1,12 +1,64 @@
 package Mojolicious::Plugin::Companies;
 use Mojo::Base 'Mojolicious::Plugin';
 
+use Daje::Model::Companies;
+
 our $VERSION = '0.01';
 
+has 'pg';
+has 'companies';
+
 sub register {
-  my ($self, $app) = @_;
+	my ($self, $app, $conf) = @_;
+	
+	$self->pg($conf->{pg});
+	
+	$self->companies(Daje::Model::Companies->new()->pg($self->pg)->init());
+	
+	$app->helper(settings => sub {$self});
 }
 
+sub save_company{
+    my($self, $data, $token) = @_;
+    
+    return $self->companies->save_company($data, $token);
+}
+
+sub load_loggedincompany_p{
+    my ($self, $token) = @_;
+    
+    return $self->companies->load_loggedincompany_p($token);
+}
+
+sub load_company_p{
+     my ($self, $companies_pkey) = @_;
+     
+     return $self->companies->load_company_p($companies_pkey);
+}
+
+sub list_companies_from_type_p{
+    my ($self, $company_type)  = @_;
+    
+    return $self->companies->list_companies_from_type_p($company_type);
+}
+
+sub list_connected_companies_p{
+    my ($self, $token)  = @_;
+    
+    return $self->companies->list_connected_companies_p($token);
+}
+
+sub list_all_p{
+    my ($self, $companytype)  = @_;
+    
+    return $self->companies->list_all_p($companytype);
+}
+
+sub create_user_link_p{
+    my ($self, $users_fkey, $companies_fkey) = @_;
+    
+    return $self->companies->create_user_link_p($users_fkey, $companies_fkey);
+}
 1;
 __END__
 
