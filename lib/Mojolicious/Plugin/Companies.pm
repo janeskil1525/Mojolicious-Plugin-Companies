@@ -3,7 +3,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 use Daje::Model::Companies;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has 'pg';
 has 'companies';
@@ -15,7 +15,7 @@ sub register {
 	
 	$self->companies(Daje::Model::Companies->new()->pg($self->pg)->init());
 	
-	$app->helper(settings => sub {$self});
+	$app->helper(companies => sub {$self});
 }
 
 sub save_company{
